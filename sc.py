@@ -8,7 +8,7 @@ import subprocess as sb
 from sys import stderr
 os.system('cls')
 from bs4 import BeautifulSoup
-os.chdir('en')
+os.chdir('language_pack')
 os.chdir('text')
 
 DEST_LANGUAGE = 'tr'
