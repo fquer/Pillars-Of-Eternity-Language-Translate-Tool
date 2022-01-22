@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 os.chdir('en')
 os.chdir('text')
 
+DEST_LANGUAGE = 'tr'
+
 
 def ls():
     output = sb.check_output(['dir', '/b'], stderr = sb.STDOUT, shell=True)
@@ -67,21 +69,21 @@ while True:
 
             file = open(i,'r',encoding = 'utf-8')
             file_data = file.read()
-
+            file.close()
+            
             soup_data = BeautifulSoup(file_data, "xml")
             
             text = soup_data.find_all('DefaultText') 
 
         
             for orj in text:
-                if orj.text != "":
-                    tr = translator.translate(orj.text , src = 'en', dest='tr')
+                if orj.text != '""' and orj.text != '':
+                    tr = translator.translate(orj.text , src = 'en', dest=DEST_LANGUAGE)
                     file_data = file_data.replace(orj.text, str(tr.text))
+                    
 
             print(file_data)
         
-            file.close()
-
             file = open(i,'w',encoding = 'utf-8')
             file.write(file_data)
             file.close()
@@ -118,25 +120,21 @@ while True:
         checked_folders.append(i)
 
         current_folder = i
-        
 
 
-print('\n\nToplam : ' + str(file_count))
+os.chdir('..')
+os.chdir('..')
 
-"""
-file = open('.\\conversations\\00_dyrwood\\00_bs_celby.stringtable','r',encoding = 'utf-8')
-
-for text in file.readlines():
-    if text.find('<DefaultText>') != -1:
-        text = text.strip()
-        text = text.replace('<DefaultText>','')
-        text = text.replace('</DefaultText>','')
-        text = text.replace('"','')
-        if len(text) != 0:
-            print(text)
-            tr = translator.translate(text , src = 'en', dest='tr')
-            tr_text = str(tr.text)
-            print(tr_text)
-
+file = open('language.xml','r',encoding = 'utf-8')
+file_data = file.read()
 file.close()
-"""
+
+file = open('language.xml','w',encoding = 'utf-8')
+file_data = file_data.replace('english',DEST_LANGUAGE)
+file_data = file_data.replace('English',DEST_LANGUAGE)
+file.write(file_data)
+file.close()
+
+
+print('\n\nFile Count : ' + str(file_count))
+print('Missing Content : ' + str(1167-file_count))
