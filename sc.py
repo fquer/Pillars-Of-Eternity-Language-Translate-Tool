@@ -1,6 +1,3 @@
-"""
-    DLC's not included yet.
-"""
 from multiprocessing.sharedctypes import Value
 import os
 import xml.etree.cElementTree as ET
@@ -69,29 +66,36 @@ while True:
         if work == True:
             file_count += 1
             print('\n[' + str(file_count) + '] ' + i)
-
-            file = open(i,'r',encoding = 'utf-8')
-            file_data = file.read()
-            file.close()
-            
-            soup_data = BeautifulSoup(file_data, "xml")
-            
-            text = soup_data.find_all('DefaultText') 
-
-        
-            for orj in text:
-                if orj.text != '""' and orj.text != '':
-                    tr = translator.translate(orj.text , src = 'en', dest=DEST_LANGUAGE)
-                    file_data = file_data.replace(orj.text, str(tr.text))
-                    
-
-            print(file_data)
-        
-            file = open(i,'w',encoding = 'utf-8')
-            file.write(file_data)
-            file.close()
-
             checked_files.append(i)
+            
+            try:
+                file = open(i,'r',encoding = 'utf-8')
+                file_data = file.read()
+                file.close()
+                
+                soup_data = BeautifulSoup(file_data, "xml")
+                
+                text = soup_data.find_all('DefaultText') 
+
+            
+                for orj in text:
+                    if orj.text != '""' and orj.text != '':
+                        tr = translator.translate(orj.text , src = 'en', dest=DEST_LANGUAGE)
+                        file_data = file_data.replace(orj.text, str(tr.text))
+                        
+
+                print(file_data)
+            
+                file = open(i,'w',encoding = 'utf-8')
+                file.write(file_data)
+                file.close()
+            except Exception as e:
+                print("\n\n"+str(e)+"\n\n")
+                checked_files.remove(i)
+                say -= 1
+                file_count -=1
+
+            
         
         if len(output) == say + 1:
             os.chdir('..')
@@ -104,11 +108,7 @@ while True:
         os.chdir(i)
         if i == 'px2_companions':
             checked_folders.remove("poi")
-
-        elif i == '04_defiance_bay_brackenbury' and first_0 == True:
-            checked_files.remove('02_bs_crucible_knight_palace.stringtable')
-            first_0 = False 
-
+        
         elif i == '13_twin_elms_elms_reach' and first_1 == True:
             checked_files.remove('13_cv_glanfathan_elms_locals_01.stringtable')
             first_1 = False 
