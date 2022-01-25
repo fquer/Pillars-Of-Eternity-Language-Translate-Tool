@@ -1,14 +1,11 @@
 """
     DLC's not included yet.
 """
-from multiprocessing.sharedctypes import Value
 import os
-import xml.etree.cElementTree as ET
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 from googletrans import Translator
 translator = Translator()
 import subprocess as sb
-from sys import stderr
 os.system('cls')
 from bs4 import BeautifulSoup
 os.chdir('language_pack')
